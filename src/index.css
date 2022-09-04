@@ -1,11 +1,3 @@
-:root {
-  --colors-brown: #090b0b;
-  --colors-light-brown: #131616;
-  --colors-red: #de4335;
-  --colors-pink: #ff7e42;
-  --colors-yellow: #f0c528;
-}
-
 *,
 *::after,
 *::before {
@@ -20,6 +12,14 @@ html {
 
 body {
   box-sizing: border-box;
+  background-color: white;
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
 }
 
 button {
