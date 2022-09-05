@@ -36,7 +36,6 @@ export const App = () => {
       {
         id: newId,
         text: '',
-        isNew: true,
         positionX,
         positionY,
       },

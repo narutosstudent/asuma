@@ -58,7 +58,6 @@ export function Card(props: CardProps) {
 
   function handleTextareBlur() {
     setIsTextareaFocused(false)
-    setCards((card) => card.id === props.card.id, { isNew: false })
   }
 
   function handleDeletion() {
