@@ -27,6 +27,7 @@
     "vite-plugin-solid": "^2.3.0"
   },
   "dependencies": {
+    "@fontsource/montserrat": "^4.5.12",
     "solid-js": "^1.4.7"
   }
 }

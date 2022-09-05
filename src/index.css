@@ -12,9 +12,10 @@ html {
 
 body {
   box-sizing: border-box;
-  background-color: white;
+  background-color: #fffed5;
   height: 100%;
   width: 100%;
+  font-family: 'Montserrat';
 }
 
 #root {
