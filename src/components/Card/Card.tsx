@@ -1,6 +1,6 @@
 import type { CardType } from '../../store'
 
-import { createEffect, createSignal } from 'solid-js'
+import { createSignal } from 'solid-js'
 
 import { Delete } from '../../icons/Delete'
 import { setCards } from '../../store'
@@ -22,14 +22,6 @@ export function Card(props: CardProps) {
   const cardNumberWithOrdinal = formatOrdinals(props.index)
 
   let textareaElement: HTMLTextAreaElement | undefined
-
-  createEffect(() => {
-    const isLastCard = props.card.id === cards[cards.length - 1].id
-    if (textareaElement && props.card.isNew && isLastCard) {
-      textareaElement.focus()
-      setIsTextareaFocused(true)
-    }
-  })
 
   function handleTextareaChange(
     event: InputEvent & {
@@ -61,6 +53,7 @@ export function Card(props: CardProps) {
     // Prevents a card from being added when double clicking on the card.
     event.stopPropagation()
     setIsTextareaFocused(true)
+    textareaElement.focus()
   }
 
   function handleTextareBlur() {
@@ -85,6 +78,7 @@ export function Card(props: CardProps) {
       onMouseUp={() => setIsDragging(false)}
       onMouseMove={handleDragging}
       onDblClick={handleCardDoubleClick}
+      tabIndex="0"
     >
       <textarea
         style={{
