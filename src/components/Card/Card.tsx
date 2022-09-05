@@ -1,4 +1,6 @@
 import type { CardType } from '../../store'
+
+import { formatOrdinals } from '../../utils'
 import './Card.css'
 
 type CardProps = {
@@ -6,6 +8,8 @@ type CardProps = {
 }
 
 export function Card(props: CardProps) {
+  const cardNumberWithOrdinal = formatOrdinals(props.card.id + 1)
+
   return (
     <div
       class="card"
@@ -13,6 +17,11 @@ export function Card(props: CardProps) {
         top: `${props.card.positionY}px`,
         left: `${props.card.positionX}px`,
       }}
-    />
+    >
+      <textarea
+        aria-label={`Edit text for ${cardNumberWithOrdinal} card`}
+        class="card__textarea"
+      />
+    </div>
   )
 }
