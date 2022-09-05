@@ -14,6 +14,7 @@
     "lint-fix": "eslint --ext .tsx,.jsx,.js,.ts --ignore-path .gitignore --fix src"
   },
   "devDependencies": {
+    "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
     "autoprefixer": "^10.4.7",
     "eslint": "^8.20.0",
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "@fontsource/montserrat": "^4.5.12",
-    "solid-js": "^1.4.7"
+    "solid-js": "^1.4.7",
+    "uuid": "^8.3.2"
   }
 }

@@ -1,8 +1,8 @@
-import type { CardType } from './store'
-
 import { createEffect, For, onMount } from 'solid-js'
+import { v4 } from 'uuid'
 
 import './App.css'
+
 import { Card } from './components'
 import { cards, setCards } from './store'
 
@@ -26,23 +26,28 @@ export const App = () => {
       target: Element
     }
   ) {
-    const newId = cards.length
+    const newId = v4()
 
     const positionX = event.clientX
     const positionY = event.clientY
 
-    setCards(newId, {
-      id: newId,
-      text: '',
-      isNew: true,
-      positionX,
-      positionY,
-    } as CardType)
+    setCards([
+      ...cards,
+      {
+        id: newId,
+        text: '',
+        isNew: true,
+        positionX,
+        positionY,
+      },
+    ])
   }
 
   return (
     <main class="container" onDblClick={handleDoubleClickOfContainer}>
-      <For each={cards}>{(card) => <Card card={card} />}</For>
+      <For each={cards}>
+        {(card, index) => <Card card={card} index={index()} />}
+      </For>
     </main>
   )
 }
