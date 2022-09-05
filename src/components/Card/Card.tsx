@@ -66,22 +66,21 @@ export function Card(props: CardProps) {
 
   return (
     <div
-      class="card"
       style={{
         top: `${props.card.positionY}px`,
         left: `${props.card.positionX}px`,
-        cursor: isDragging() ? 'grabbing' : 'default',
       }}
+      class="card"
       onMouseDown={() => setIsDragging(true)}
       onMouseUp={() => setIsDragging(false)}
       onMouseMove={handleDragging}
       onDblClick={handleCardDoubleClick}
     >
       <textarea
-        ref={textareaElement}
         style={{
           cursor: isTextareaFocused() ? 'auto' : 'inherit',
         }}
+        ref={textareaElement}
         disabled={!isTextareaFocused()}
         onFocus={() => setIsTextareaFocused(true)}
         onBlur={handleTextareBlur}
