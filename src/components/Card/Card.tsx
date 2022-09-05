@@ -55,6 +55,7 @@ export function Card(props: CardProps) {
   }
 
   function handleCardDoubleClick(event: MouseEvent) {
+    // Prevents a card from being added when double clicking on the card.
     event.stopPropagation()
     setIsTextareaFocused(true)
   }
