@@ -2,6 +2,7 @@ import type { CardType } from '../../store'
 
 import { createEffect, createSignal } from 'solid-js'
 
+import { Delete } from '../../icons/Delete'
 import { setCards } from '../../store'
 import { cards } from '../../store'
 import { formatOrdinals } from '../../utils'
@@ -9,6 +10,7 @@ import './Card.css'
 
 type CardProps = {
   card: CardType
+  index: number
 }
 
 export function Card(props: CardProps) {
@@ -17,7 +19,7 @@ export function Card(props: CardProps) {
   const [isTextareaFocused, setIsTextareaFocused] = createSignal(false)
 
   // With this format we can give the textareas a unique accessible name.
-  const cardNumberWithOrdinal = formatOrdinals(props.card.id + 1)
+  const cardNumberWithOrdinal = formatOrdinals(props.index)
 
   let textareaElement: HTMLTextAreaElement | undefined
 
@@ -25,6 +27,7 @@ export function Card(props: CardProps) {
     const isLastCard = props.card.id === cards[cards.length - 1].id
     if (textareaElement && props.card.isNew && isLastCard) {
       textareaElement.focus()
+      setIsTextareaFocused(true)
     }
   })
 
@@ -35,7 +38,7 @@ export function Card(props: CardProps) {
     }
   ) {
     setCardText((event.target as HTMLTextAreaElement).value)
-    setCards(props.card.id, { text: cardText() })
+    setCards((card) => card.id === props.card.id, { text: cardText() })
   }
 
   function handleDragging(
@@ -48,9 +51,9 @@ export function Card(props: CardProps) {
       return
     }
 
-    setCards(props.card.id, {
-      positionX: event.clientX,
+    setCards((card) => card.id === props.card.id, {
       positionY: event.clientY,
+      positionX: event.clientX,
     })
   }
 
@@ -62,7 +65,13 @@ export function Card(props: CardProps) {
 
   function handleTextareBlur() {
     setIsTextareaFocused(false)
-    setCards(props.card.id, { isNew: false })
+    setCards((card) => card.id === props.card.id, { isNew: false })
+  }
+
+  function handleDeletion() {
+    const newCards = cards.filter((card) => card.id !== props.card.id)
+
+    setCards(newCards)
   }
 
   return (
@@ -90,6 +99,16 @@ export function Card(props: CardProps) {
         value={cardText()}
         onInput={handleTextareaChange}
       />
+      <div class="card__menu">
+        <button
+          aria-label={`Delete ${cardNumberWithOrdinal} card`}
+          class="card__delete-button"
+          title="Delete card"
+          onClick={handleDeletion}
+        >
+          <Delete />
+        </button>
+      </div>
     </div>
   )
 }
