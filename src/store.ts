@@ -7,4 +7,5 @@ export type CardType = {
   text: string
   positionX: number
   positionY: number
+  fontSize: number
 }

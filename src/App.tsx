@@ -38,6 +38,7 @@ export const App = () => {
         text: '',
         positionX,
         positionY,
+        fontSize: 18,
       },
     ])
   }

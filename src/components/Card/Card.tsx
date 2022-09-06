@@ -15,6 +15,7 @@ type CardProps = {
 
 export function Card(props: CardProps) {
   const [cardText, setCardText] = createSignal(props.card.text)
+  const [fontSize, setFontSize] = createSignal(props.card.fontSize)
   const [isDragging, setIsDragging] = createSignal(false)
   const [isTextareaFocused, setIsTextareaFocused] = createSignal(false)
 
@@ -66,6 +67,18 @@ export function Card(props: CardProps) {
     setCards(newCards)
   }
 
+  function handleFontsizeChange(
+    event: InputEvent & {
+      currentTarget: HTMLInputElement
+      target: Element
+    }
+  ) {
+    setFontSize(Number((event.target as HTMLInputElement).value))
+    setCards((card) => card.id === props.card.id, {
+      fontSize: fontSize(),
+    })
+  }
+
   return (
     <div
       style={{
@@ -82,6 +95,7 @@ export function Card(props: CardProps) {
       <textarea
         style={{
           cursor: isTextareaFocused() ? 'auto' : 'inherit',
+          'font-size': `calc(1rem * ${fontSize()} / 16)`,
         }}
         ref={textareaElement}
         disabled={!isTextareaFocused()}
@@ -101,6 +115,13 @@ export function Card(props: CardProps) {
         >
           <Delete />
         </button>
+        <input
+          aria-label="font size"
+          class="card__font-input"
+          type="number"
+          value={fontSize()}
+          onInput={handleFontsizeChange}
+        />
       </div>
     </div>
   )
