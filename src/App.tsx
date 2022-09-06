@@ -15,7 +15,8 @@ export const App = () => {
   })
 
   createEffect(() => {
-    if (cards.length > 0) {
+    // We need to update local storage if we've removed all cards.
+    if (cards.length >= 0) {
       localStorage.setItem(CARDS_STORAGE_KEY, JSON.stringify(cards))
     }
   })
