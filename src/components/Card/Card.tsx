@@ -44,9 +44,12 @@ export function Card(props: CardProps) {
       return
     }
 
+    const rect = event.target.getBoundingClientRect()
+
     setCards((card) => card.id === props.card.id, {
-      positionY: event.clientY,
-      positionX: event.clientX,
+      positionY:
+        event.pageY + rect.height / 2 - event.offsetY + event.movementY,
+      positionX: event.pageX + rect.width / 2 - event.offsetX + event.movementX,
     })
   }
 
