@@ -17,6 +17,7 @@ export function Card(props: CardProps) {
   const [cardText, setCardText] = createSignal(props.card.text)
   const [fontSize, setFontSize] = createSignal(props.card.fontSize)
   const [isDragging, setIsDragging] = createSignal(false)
+  const [mouseDownPos, setMouseDownPos] = createSignal({ x: 0, y: 0 })
   const [isTextareaFocused, setIsTextareaFocused] = createSignal(false)
 
   // With this format we can give the textareas a unique accessible name.
@@ -44,9 +45,21 @@ export function Card(props: CardProps) {
       return
     }
 
+    let y = props.card.positionY
+    let x = props.card.positionX
+
+    const rect = event.target.getBoundingClientRect()
+
+    if (event.movementY != 0) {
+      y = event.clientY + rect.height / 2 - mouseDownPos().y
+    }
+    if (event.movementX != 0) {
+      x = event.clientX + rect.width / 2 - mouseDownPos().x
+    }
+
     setCards((card) => card.id === props.card.id, {
-      positionY: event.clientY,
-      positionX: event.clientX,
+      positionY: y,
+      positionX: x,
     })
   }
 
@@ -79,6 +92,11 @@ export function Card(props: CardProps) {
     })
   }
 
+  function handleMouseDown(event: MouseEvent) {
+    setIsDragging(true)
+    setMouseDownPos({ y: event.offsetY, x: event.offsetX })
+  }
+
   return (
     <div
       style={{
@@ -86,8 +104,9 @@ export function Card(props: CardProps) {
         left: `${props.card.positionX}px`,
       }}
       class="card"
-      onMouseDown={() => setIsDragging(true)}
+      onMouseDown={handleMouseDown}
       onMouseUp={() => setIsDragging(false)}
+      onMouseOut={() => setIsDragging(false)}
       onMouseMove={handleDragging}
       onDblClick={handleCardDoubleClick}
       tabIndex="0"
