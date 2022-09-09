@@ -41,12 +41,6 @@ export function Card(props: CardProps) {
 
   createEffect(() => {
     if (!props.mouseLeftPressed() || !isDragging() || isTextareaFocused()) {
-      console.log({
-        a: props.mouseLeftPressed(),
-        b: isDragging(),
-        c: isTextareaFocused(),
-      })
-
       return
     }
 
