@@ -1,6 +1,7 @@
 import type { CardType } from '../../store'
+import type { Accessor } from 'solid-js'
 
-import { createSignal } from 'solid-js'
+import { createEffect, createSignal } from 'solid-js'
 
 import { Delete } from '../../icons/Delete'
 import { setCards } from '../../store'
@@ -11,6 +12,8 @@ import './Card.css'
 type CardProps = {
   card: CardType
   index: number
+  mouseMoveEvent: Accessor<MouseEvent>
+  mouseLeftPressed: Accessor<boolean>
 }
 
 export function Card(props: CardProps) {
@@ -23,6 +26,7 @@ export function Card(props: CardProps) {
   // With this format we can give the textareas a unique accessible name.
   const cardNumberWithOrdinal = formatOrdinals(props.index)
 
+  let cardElementRef: HTMLDivElement
   let textareaElement: HTMLTextAreaElement | undefined
 
   function handleTextareaChange(
@@ -35,33 +39,34 @@ export function Card(props: CardProps) {
     setCards((card) => card.id === props.card.id, { text: cardText() })
   }
 
-  function handleDragging(
-    event: MouseEvent & {
-      currentTarget: HTMLDivElement
-      target: Element
-    }
-  ) {
-    if (!isDragging() || isTextareaFocused()) {
+  createEffect(() => {
+    if (!props.mouseLeftPressed() || !isDragging() || isTextareaFocused()) {
+      console.log({
+        a: props.mouseLeftPressed(),
+        b: isDragging(),
+        c: isTextareaFocused(),
+      })
+
       return
     }
 
     let y = props.card.positionY
     let x = props.card.positionX
 
-    const rect = event.target.getBoundingClientRect()
+    const rect = cardElementRef.getBoundingClientRect()
 
-    if (event.movementY != 0) {
-      y = event.clientY + rect.height / 2 - mouseDownPos().y
+    if (props.mouseMoveEvent().movementY != 0) {
+      y = props.mouseMoveEvent().clientY + rect.height / 2 - mouseDownPos().y
     }
-    if (event.movementX != 0) {
-      x = event.clientX + rect.width / 2 - mouseDownPos().x
+    if (props.mouseMoveEvent().movementX != 0) {
+      x = props.mouseMoveEvent().clientX + rect.width / 2 - mouseDownPos().x
     }
 
     setCards((card) => card.id === props.card.id, {
       positionY: y,
       positionX: x,
     })
-  }
+  })
 
   function handleCardDoubleClick(event: MouseEvent) {
     // Prevents a card from being added when double clicking on the card.
@@ -93,12 +98,13 @@ export function Card(props: CardProps) {
   }
 
   function handleMouseDown(event: MouseEvent) {
-    setIsDragging(true)
     setMouseDownPos({ y: event.offsetY, x: event.offsetX })
+    setIsDragging(true)
   }
 
   return (
     <div
+      ref={cardElementRef}
       style={{
         top: `${props.card.positionY}px`,
         left: `${props.card.positionX}px`,
@@ -106,8 +112,6 @@ export function Card(props: CardProps) {
       class="card"
       onMouseDown={handleMouseDown}
       onMouseUp={() => setIsDragging(false)}
-      onMouseOut={() => setIsDragging(false)}
-      onMouseMove={handleDragging}
       onDblClick={handleCardDoubleClick}
       tabIndex="0"
     >

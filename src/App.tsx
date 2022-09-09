@@ -1,4 +1,4 @@
-import { createEffect, For, onMount } from 'solid-js'
+import { createEffect, createSignal, For, onMount } from 'solid-js'
 import { v4 } from 'uuid'
 
 import './App.css'
@@ -9,6 +9,9 @@ import { cards, setCards } from './store'
 const CARDS_STORAGE_KEY = 'cards' as const
 
 export const App = () => {
+  const [mouseMoveEvent, setMouseMoveEvent] = createSignal<MouseEvent>()
+  const [mouseLeftPressed, setMouseLeftPressed] = createSignal<boolean>(false)
+
   onMount(() => {
     const storageItems = JSON.parse(localStorage.getItem(CARDS_STORAGE_KEY))
     setCards(storageItems || [])
@@ -45,9 +48,22 @@ export const App = () => {
   }
 
   return (
-    <main class="container" onDblClick={handleDoubleClickOfContainer}>
+    <main
+      class="container"
+      onDblClick={handleDoubleClickOfContainer}
+      onMouseDown={() => setMouseLeftPressed(true)}
+      onMouseUp={() => setMouseLeftPressed(false)}
+      onMouseMove={(event) => setMouseMoveEvent(event)}
+    >
       <For each={cards}>
-        {(card, index) => <Card card={card} index={index()} />}
+        {(card, index) => (
+          <Card
+            card={card}
+            index={index()}
+            mouseMoveEvent={mouseMoveEvent}
+            mouseLeftPressed={mouseLeftPressed}
+          />
+        )}
       </For>
     </main>
   )
