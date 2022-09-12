@@ -92,6 +92,10 @@ export function Card(props: CardProps) {
   }
 
   function handleMouseDown(event: MouseEvent) {
+    const rect = cardElementRef.getBoundingClientRect()
+
+    if (event.clientY < rect.y) return
+
     setMouseDownPos({ y: event.offsetY, x: event.offsetX })
     setIsDragging(true)
   }
